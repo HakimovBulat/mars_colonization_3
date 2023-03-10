@@ -2,7 +2,6 @@ from flask import Flask
 from data import db_session
 from data.users import User
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
@@ -49,7 +48,7 @@ def main():
     user_4.speciality = 'biology teacher'
     user_4.address = 'module_1'
     user_4.email = 'lucas_skywalker@tatuin.org'
-    db_sess.add(user_3)
+    db_sess.add(user_4)
     db_sess.commit()
 
 
