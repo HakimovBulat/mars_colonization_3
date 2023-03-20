@@ -32,7 +32,7 @@ def register():
             surname=request.form['surname'], name=request.form['name'], 
             email=request.form['username'], age=request.form['age'],
             position=request.form['position'], speciality=request.form['speciality'], 
-            address=request.form['address']
+            address=request.form['address'], hashed_password=request.form['password']
                     )
         db_sess.add(user)
         db_sess.commit()
