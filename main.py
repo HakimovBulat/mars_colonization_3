@@ -57,24 +57,6 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
-#@app.route('/register', methods=['GET', 'POST'])
-#def register():
-#    form = UserForm()
-#    if form.validate_on_submit():
-#        db_session.global_init("db/blogs.db")
-#        db_sess = db_session.create_session()
-#        user = User(
-#            surname=request.form['surname'], name=request.form['name'], 
-#            email=request.form['username'], age=request.form['age'],
-#            position=request.form['position'], speciality=request.form['speciality'], 
-#            address=request.form['address']
-#                    )
-#        db_sess.add(user)
-#        db_sess.commit()
-#        return redirect('/success')
-#    return render_template('register.html', title='Регистрация', form=form)
-
-
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
     form = RegisterForm()
