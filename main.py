@@ -1,10 +1,12 @@
 from flask import Flask, render_template, redirect, request
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from data import db_session
 from data.users import User
 from data.jobs import Jobs
-from flask_login import LoginManager, login_user, login_required, logout_user
-from data.loginform import LoginForm
+from forms.loginform import LoginForm
+from forms.job import JobForm
 from forms.user import RegisterForm
+
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -26,17 +28,28 @@ def logout():
     return redirect("/")
 
 
+@app.route('/addjob',  methods=['GET', 'POST'])
+def addjob():
+    form = JobForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        jobs = Jobs()
+        jobs.job = form.job.data
+        jobs.team_leader = form.team_leader.data
+        jobs.is_finished = form.is_finished.data
+        jobs.work_size = form.work_size.data
+        jobs.collaborators = form.collaborators.data
+        current_user.jobs.append(jobs)
+        db_sess.merge(current_user)
+        db_sess.commit()
+        return redirect('/')
+    return render_template('jobs.html', title='Добавление работы', form=form)
+
+
 @app.route("/")
 def index():
     db_sess = db_session.create_session()
     jobs = db_sess.query(Jobs).filter()
-    return render_template("index.html", jobs=jobs)
-
-
-@app.route('/work_logs')
-def work_logs():
-    db_sess = db_session.create_session()
-    jobs = db_sess.query(Jobs).all()
     team_leaders = []
     for job in jobs:
         user = db_sess.query(User).filter(User.id == job.team_leader).first()
@@ -73,7 +86,7 @@ def reqister():
             email=form.email.data, age=form.age.data,
             position=form.position.data, speciality=form.speciality.data, 
             address=form.address.data
-        )
+            )
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
